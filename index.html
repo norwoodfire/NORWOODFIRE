@@ -112,11 +112,14 @@
             transition: 0.2s;
             display: inline-block;
             margin: 5px;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
         }
 
         .btn-red { background-color: var(--fire-red); color: white; }
         .btn-red:hover { background-color: #b71c1c; }
-        .btn-outline { border: 2px solid white; color: white; }
+        .btn-outline { border: 2px solid white; color: white; background: transparent; }
         .btn-outline:hover { background: white; color: var(--charcoal); }
 
         .section { padding: 4rem 10%; }
@@ -209,6 +212,10 @@
             border-radius: 4px;
             font-size: 0.9rem;
         }
+
+        .hidden-paypal-fields {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -285,36 +292,72 @@
 <div class="form-section">
     <h3 style="text-align: center; color: var(--fire-red);">Membership & Payment Form</h3>
     
-    <div class="form-group">
-        <label for="membership_type">Select Payment Type</label>
-        <select id="membership_type" required="">
-            <option value="">-- Select Option --</option>
-            <option value="residential">Residential Membership</option>
-            <option value="business">Business Membership</option>
-            <option value="donation">One-Time Donation</option>
-        </select>
-    </div>
+    <form id="membership-form">
+        <!-- Member Information Section -->
+        <h4 style="color: var(--charcoal); border-bottom: 2px solid var(--fire-red); padding-bottom: 10px;">Member Information</h4>
+        
+        <div class="form-group">
+            <label for="full_name">Full Name *</label>
+            <input type="text" id="full_name" name="full_name" required="">
+        </div>
 
-    <div id="custom_donation" class="form-group" style="display: none;">
-        <label for="amount_input">Donation Amount ($)</label>
-        <input type="number" id="amount_input" placeholder="25.00" step="0.01" min="1.00">
-    </div>
+        <div class="form-group">
+            <label for="address">Service Address (Within our 160 Square Mile Coverage Area) *</label>
+            <input type="text" id="address" name="address" placeholder="123 Main Street, Norwood, MO" required="">
+        </div>
 
-    <div class="info-box">
-        <p style="margin: 0;"><strong>Secure Payment:</strong> After selecting your membership type, click the PayPal button below to complete your payment securely.</p>
-    </div>
+        <div class="form-group">
+            <label for="phone">Phone Number *</label>
+            <input type="tel" id="phone" name="phone" required="">
+        </div>
 
-    <!-- PAYPAL HOSTED BUTTONS -->
-    <div class="paypal-buttons-container">
-        <div id="paypal-container-6Q44GHJGZLDXS"></div>
-    </div>
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="optional@example.com">
+        </div>
+
+        <!-- Membership Type Section -->
+        <h4 style="color: var(--charcoal); border-bottom: 2px solid var(--fire-red); padding-bottom: 10px; margin-top: 2rem;">Membership Type</h4>
+        
+        <div class="form-group">
+            <label for="membership_type">Select Payment Type *</label>
+            <select id="membership_type" name="membership_type" required="">
+                <option value="">-- Select Option --</option>
+                <option value="residential">Residential Membership</option>
+                <option value="business">Business Membership</option>
+                <option value="donation">One-Time Donation</option>
+            </select>
+        </div>
+
+        <div id="custom_donation" class="form-group" style="display: none;">
+            <label for="amount_input">Donation Amount ($) *</label>
+            <input type="number" id="amount_input" name="amount_input" placeholder="25.00" step="0.01" min="1.00" required="">
+        </div>
+
+        <div class="info-box">
+            <p style="margin: 0;"><strong>Next Step:</strong> Click the PayPal button below to complete your payment securely. Your information will be sent to PayPal along with your payment.</p>
+        </div>
+
+        <!-- PayPal Form (Hidden) -->
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal-form" style="display: none;">
+            <input type="hidden" name="cmd" value="_xclick">
+            <input type="hidden" name="business" value="dispatchtimes@yahoo.com">
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="hidden" name="no_shipping" value="1">
+            <input type="hidden" name="item_name" id="paypal_item_name" value="NCVFD Membership">
+            <input type="hidden" name="amount" id="paypal_amount" value="70.00">
+            <input type="hidden" name="invoice" id="paypal_invoice" value="">
+            <input type="hidden" name="custom" id="paypal_custom" value="">
+            <input type="hidden" name="return" value="https://norwoodfire.github.io/NORWOODFIRE/index.html">
+            <input type="hidden" name="cancel_return" value="https://norwoodfire.github.io/NORWOODFIRE/index.html">
+        </form>
+
+        <button type="button" id="submit-btn" class="btn btn-red" style="width: 100%; margin-top: 1.5rem; padding: 16px;">Proceed to PayPal Payment</button>
+    </form>
 </div>
-
-<script src="https://www.paypal.com/sdk/js?client-id=BAArqrLK3wHsySofNaQpsYpxp704XeapEdaf8iq_dSoljUiZTauFP57-On0Sm1DQvxPjfsku0NG7dFYVMs&components=hosted-buttons&enable-funding=venmo&currency=USD"></script>
 
 <script>
     // MEMBERSHIP PRICING CONFIGURATION
-    // Price locked at $75 for now - will stay at $75 indefinitely
     const membershipPrices = {
         2026: { residential: 70.00, business: 70.00, nextYear: 2027, nextResidential: 75.00 },
         2027: { residential: 75.00, business: 75.00, nextYear: 2028, nextResidential: 75.00 },
@@ -323,23 +366,17 @@
         2030: { residential: 75.00, business: 75.00, nextYear: 2031, nextResidential: 75.00 },
         2031: { residential: 75.00, business: 75.00, nextYear: 2032, nextResidential: 75.00 },
         2032: { residential: 75.00, business: 75.00, nextYear: 2033, nextResidential: 75.00 },
-        // Price will stay at $75 indefinitely
     };
 
-    // Get current year
     const currentYear = new Date().getFullYear();
     const currentPricing = membershipPrices[currentYear] || membershipPrices[2026];
     const nextYear = currentPricing.nextYear;
     const nextResidential = currentPricing.nextResidential || currentPricing.residential;
 
-    // Update page heading with current year
     document.getElementById('membership-year').textContent = currentYear + ' Membership & Donations';
-
-    // Update pricing displays
     document.getElementById('residential-price').textContent = '$' + currentPricing.residential.toFixed(2);
     document.getElementById('business-price').textContent = '$' + currentPricing.business.toFixed(2);
 
-    // Update note with next year's price
     const residentialNote = document.getElementById('residential-note');
     if (currentPricing.residential === nextResidential) {
         residentialNote.textContent = 'Membership rate locked at $' + currentPricing.residential.toFixed(2);
@@ -347,27 +384,72 @@
         residentialNote.textContent = 'Note: Increasing to $' + nextResidential.toFixed(2) + ' in ' + nextYear;
     }
 
-    // Form handling
+    // Form elements
+    const membershipForm = document.getElementById('membership-form');
     const membershipType = document.getElementById('membership_type');
     const customAmountDiv = document.getElementById('custom_donation');
     const amountInput = document.getElementById('amount_input');
+    const submitBtn = document.getElementById('submit-btn');
+    const paypalForm = document.getElementById('paypal-form');
 
     membershipType.addEventListener('change', function() {
         if (this.value === 'donation') {
             customAmountDiv.style.display = 'block';
+            amountInput.required = true;
         } else {
             customAmountDiv.style.display = 'none';
+            amountInput.required = false;
         }
     });
 
-    amountInput.addEventListener('input', function() {
-        // Update PayPal button or custom amount handling here
-    });
+    submitBtn.addEventListener('click', function(e) {
+        e.preventDefault();
 
-    // Render PayPal Hosted Buttons
-    paypal.HostedButtons({
-        hostedButtonId: "6Q44GHJGZLDXS",
-    }).render("#paypal-container-6Q44GHJGZLDXS")
+        // Validate form
+        if (!membershipForm.checkValidity()) {
+            alert('Please fill in all required fields.');
+            membershipForm.reportValidity();
+            return;
+        }
+
+        // Get member info
+        const fullName = document.getElementById('full_name').value;
+        const address = document.getElementById('address').value;
+        const phone = document.getElementById('phone').value;
+        const email = document.getElementById('email').value;
+        const memberType = membershipType.value;
+
+        // Validate donation amount
+        if (memberType === 'donation' && (!amountInput.value || amountInput.value <= 0)) {
+            alert('Please enter a donation amount.');
+            return;
+        }
+
+        // Set PayPal fields
+        const itemName = memberType === 'residential' ? 'Residential Membership' : 
+                        memberType === 'business' ? 'Business Membership' : 'NCVFD Donation';
+        
+        let amount;
+        if (memberType === 'residential') {
+            amount = currentPricing.residential.toFixed(2);
+        } else if (memberType === 'business') {
+            amount = currentPricing.business.toFixed(2);
+        } else {
+            amount = amountInput.value;
+        }
+
+        // Create unique invoice number
+        const invoiceNum = currentYear + '-' + Date.now();
+
+        // Set hidden PayPal fields
+        document.getElementById('paypal_item_name').value = 'NCVFD ' + currentYear + ': ' + itemName;
+        document.getElementById('paypal_amount').value = amount;
+        document.getElementById('paypal_invoice').value = invoiceNum;
+        document.getElementById('paypal_custom').value = 'Name: ' + fullName + ' | Address: ' + address + ' | Phone: ' + phone + ' | Email: ' + email;
+
+        // Submit PayPal form
+        paypalForm.submit();
+    });
 </script>
 
 <section id="funding" class="section">
