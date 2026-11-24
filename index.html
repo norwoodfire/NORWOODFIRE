@@ -36,6 +36,18 @@
 
         header h1 { margin: 0; font-size: 1.2rem; }
 
+        .department-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .department-brand img {
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+        }
+
         nav a {
             color: white;
             text-decoration: none;
@@ -240,7 +252,10 @@
 </div>
 
 <header>
-    <h1>NORWOOD VOLUNTEER FIRE DEPT</h1>
+    <div class="department-brand">
+        <img src="Fire%20Rescue%20Emblem-014500.jpg" alt="Norwood Community Volunteer Fire Department emblem">
+        <h1>NORWOOD VOLUNTEER FIRE DEPT</h1>
+    </div>
     <nav>
         <a href="#about">About</a>
         <a href="#auctions">Auctions</a>
