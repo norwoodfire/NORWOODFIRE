@@ -373,21 +373,22 @@
             <p style="margin: 0;"><strong>Next Step:</strong> Click the PayPal button below to complete your payment securely. Your information will be sent to PayPal along with your payment.</p>
         </div>
 
-        <!-- PayPal Form (Hidden) -->
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal-form" style="display: none;">
-            <input type="hidden" name="cmd" value="_xclick">
-            <input type="hidden" name="business" value="dispatchtimes@yahoo.com">
-            <input type="hidden" name="currency_code" value="USD">
-            <input type="hidden" name="no_shipping" value="1">
-            <input type="hidden" name="item_name" id="paypal_item_name" value="NCVFD Membership">
-            <input type="hidden" name="amount" id="paypal_amount" value="75.00">
-            <input type="hidden" name="invoice" id="paypal_invoice" value="">
-            <input type="hidden" name="custom" id="paypal_custom" value="">
-            <input type="hidden" name="return" value="https://norwoodfire.github.io/NORWOODFIRE/index.html">
-            <input type="hidden" name="cancel_return" value="https://norwoodfire.github.io/NORWOODFIRE/index.html">
-        </form>
-
         <button type="button" id="submit-btn" class="btn btn-red" style="width: 100%; margin-top: 1.5rem; padding: 16px;">Proceed to PayPal Payment</button>
+    </form>
+
+    <!-- PayPal Form (Hidden) -->
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal-form" style="display: none;">
+        <input type="hidden" name="cmd" value="_xclick">
+        <input type="hidden" name="business" value="dispatchtimes@yahoo.com">
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="hidden" name="no_shipping" value="1">
+        <input type="hidden" name="charset" value="utf-8">
+        <input type="hidden" name="item_name" id="paypal_item_name" value="NCVFD Membership">
+        <input type="hidden" name="amount" id="paypal_amount" value="75.00">
+        <input type="hidden" name="invoice" id="paypal_invoice" value="">
+        <input type="hidden" name="custom" id="paypal_custom" value="">
+        <input type="hidden" name="return" value="https://norwoodfire.github.io/NORWOODFIRE/index.html">
+        <input type="hidden" name="cancel_return" value="https://norwoodfire.github.io/NORWOODFIRE/index.html">
     </form>
 </div>
 
