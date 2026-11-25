@@ -80,24 +80,24 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
+            background-image:
                 radial-gradient(circle at 20% 50%, rgba(198, 40, 40, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(251, 192, 45, 0.05) 0%, transparent 50%);
             pointer-events: none;
         }
 
-        .hero h2 { 
-            font-size: 2.5rem; 
-            margin-bottom: 0.5rem; 
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
             position: relative;
             z-index: 2;
         }
 
-        .hero p { 
-            font-size: 1.2rem; 
-            max-width: 800px; 
-            margin-bottom: 2rem; 
-            color: #fff; 
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            color: #fff;
             position: relative;
             z-index: 2;
         }
@@ -308,7 +308,6 @@
             <h3>Residential</h3>
             <p>Annual protection for your Norwood Community home or property.</p>
             <div style="font-size: 2rem; font-weight: bold; margin: 1rem 0;"><span id="residential-price">$75</span> <span style="font-size: 1rem;">/year</span></div>
-            <p style="font-size: 0.8rem; color: #666;" id="residential-note">Membership rate locked at $75.00</p>
         </div>
         <div class="card membership-card">
             <h3>Business</h3>
@@ -326,11 +325,10 @@
 
 <div class="form-section">
     <h3 style="text-align: center; color: var(--fire-red);">Membership & Payment Form</h3>
-    
+
     <form id="membership-form">
-        <!-- Member Information Section -->
         <h4 style="color: var(--charcoal); border-bottom: 2px solid var(--fire-red); padding-bottom: 10px;">Member Information</h4>
-        
+
         <div class="form-group">
             <label for="full_name">Full Name *</label>
             <input type="text" id="full_name" name="full_name" required="">
@@ -351,9 +349,8 @@
             <input type="email" id="email" name="email" placeholder="optional@example.com">
         </div>
 
-        <!-- Membership Type Section -->
         <h4 style="color: var(--charcoal); border-bottom: 2px solid var(--fire-red); padding-bottom: 10px; margin-top: 2rem;">Membership Type</h4>
-        
+
         <div class="form-group">
             <label for="membership_type">Select Payment Type *</label>
             <select id="membership_type" name="membership_type" required="">
@@ -376,7 +373,6 @@
         <button type="button" id="submit-btn" class="btn btn-red" style="width: 100%; margin-top: 1.5rem; padding: 16px;">Proceed to PayPal Payment</button>
     </form>
 
-    <!-- PayPal Form (Hidden) -->
     <form action="https://www.paypal.com/cgi-bin/webscr" method="post" id="paypal-form" style="display: none;">
         <input type="hidden" name="cmd" value="_xclick">
         <input type="hidden" name="business" value="dispatchtimes@yahoo.com">
@@ -393,7 +389,6 @@
 </div>
 
 <script>
-    // MEMBERSHIP PRICING CONFIGURATION
     const membershipPrices = {
         2026: { residential: 75.00, business: 75.00, nextYear: 2027, nextResidential: 75.00 },
         2027: { residential: 75.00, business: 75.00, nextYear: 2028, nextResidential: 75.00 },
@@ -406,21 +401,11 @@
 
     const currentYear = new Date().getFullYear();
     const currentPricing = membershipPrices[currentYear] || membershipPrices[2026];
-    const nextYear = currentPricing.nextYear;
-    const nextResidential = currentPricing.nextResidential || currentPricing.residential;
 
     document.getElementById('membership-year').textContent = currentYear + ' Membership & Donations';
     document.getElementById('residential-price').textContent = '$' + currentPricing.residential.toFixed(2);
     document.getElementById('business-price').textContent = '$' + currentPricing.business.toFixed(2);
 
-    const residentialNote = document.getElementById('residential-note');
-    if (currentPricing.residential === nextResidential) {
-        residentialNote.textContent = 'Membership rate locked at $' + currentPricing.residential.toFixed(2);
-    } else {
-        residentialNote.textContent = 'Note: Increasing to $' + nextResidential.toFixed(2) + ' in ' + nextYear;
-    }
-
-    // Form elements
     const membershipForm = document.getElementById('membership-form');
     const membershipType = document.getElementById('membership_type');
     const customAmountDiv = document.getElementById('custom_donation');
@@ -441,30 +426,26 @@
     submitBtn.addEventListener('click', function(e) {
         e.preventDefault();
 
-        // Validate form
         if (!membershipForm.checkValidity()) {
             alert('Please fill in all required fields.');
             membershipForm.reportValidity();
             return;
         }
 
-        // Get member info
         const fullName = document.getElementById('full_name').value;
         const address = document.getElementById('address').value;
         const phone = document.getElementById('phone').value;
         const email = document.getElementById('email').value;
         const memberType = membershipType.value;
 
-        // Validate donation amount
         if (memberType === 'donation' && (!amountInput.value || amountInput.value <= 0)) {
             alert('Please enter a donation amount.');
             return;
         }
 
-        // Set PayPal fields
-        const itemName = memberType === 'residential' ? 'Residential Membership' : 
-                        memberType === 'business' ? 'Business Membership' : 'NCVFD Donation';
-        
+        const itemName = memberType === 'residential' ? 'Residential Membership' :
+                         memberType === 'business' ? 'Business Membership' : 'NCVFD Donation';
+
         let amount;
         if (memberType === 'residential') {
             amount = currentPricing.residential.toFixed(2);
@@ -474,16 +455,13 @@
             amount = amountInput.value;
         }
 
-        // Create unique invoice number
         const invoiceNum = currentYear + '-' + Date.now();
 
-        // Set hidden PayPal fields
         document.getElementById('paypal_item_name').value = 'NCVFD ' + currentYear + ': ' + itemName;
         document.getElementById('paypal_amount').value = amount;
         document.getElementById('paypal_invoice').value = invoiceNum;
         document.getElementById('paypal_custom').value = 'Name: ' + fullName + ' | Address: ' + address + ' | Phone: ' + phone + ' | Email: ' + email;
 
-        // Submit PayPal form
         paypalForm.submit();
     });
 </script>
